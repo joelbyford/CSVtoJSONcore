@@ -1,0 +1,26 @@
+# Provided here are several examples that can be used to test the API that it is functioning correctly when running on the localhost.
+POST http://localhost:5000/csvtojson/
+Content-Type: text/csv
+
+this,is,a,test
+1,2,3,4
+a,b,c,d
+5,6,7,8
+
+####
+POST http://localhost:5000/csvtojson/
+Content-Type: text/plain
+
+this,is,a,test
+1,2,3,4
+a,b,c,d
+9,10,11,12
+
+####
+# Exaple using a different delimieter
+POST http://localhost:5000/csvtojson/?delimiter=|
+Content-Type: text/plain
+
+this|is|a|test
+1|2|3|4
+a|b|c|d
