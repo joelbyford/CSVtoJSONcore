@@ -1,4 +1,5 @@
 # CSVtoJSONcore
+**IMPORTANT: For a .NET Framework version of this repo, please see [joelbyford/CSVtoJSON](https://github.com/joelbyford/CSVtoJSON) instead (which was forked from [jeffhollan/CSVtoJSON](https://github.com/jeffhollan/CSVtoJSON).**
 
 Simple REST API which converts a delimited payload (via HTTP POST) to a JSON object.  
 
