@@ -1,6 +1,9 @@
 # Provided here are several examples that can be used to test the API that it is functioning correctly when running on the localhost.
+
+# Example using basic authentication & passing text/csv (see appsettings.json for enabling basic auth)
 POST http://localhost:5000/csvtojson/
 Content-Type: text/csv
+Authorization: Basic testUser:testPassword
 
 this,is,a,test
 1,2,3,4
@@ -8,6 +11,7 @@ a,b,c,d
 5,6,7,8
 
 ####
+# Example with anonymous (no authentication) & passing text/plain
 POST http://localhost:5000/csvtojson/
 Content-Type: text/plain
 
@@ -17,7 +21,7 @@ a,b,c,d
 9,10,11,12
 
 ####
-# Exaple using a different delimieter
+# Exaple using a different delimieter and no authentication
 POST http://localhost:5000/csvtojson/?delimiter=|
 Content-Type: text/plain
 

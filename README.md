@@ -46,6 +46,29 @@ Results should appear similar to the following:
 ```
 Additional examples can be found in the `test` folder.
 
+## Basic Authentication (Added on 1/19/2021)
+Added the ability to use Basic Authentication with the API.  In order to leverage this functionality, please use the `appsettings.json` file to enable basic authentication, provide your "realm" (typically your API's url), and point to the json file where your users are listed (defaults to the provided `authorizedUsers.json`):
+
+```
+"AppSettings" : {
+    "BasicAuth" : {
+      "Enabled" : false,                     # change this to true
+      "Realm" : "example-realm.com",         # change this to your API's Domain
+      "UsersJson" : "authorizedUsers.json"   # change this (if necessary) to the json file with authorized users
+    }
+  }
+
+```
+
+The Authorized Users are simply stored in a json file in the following format:
+
+```
+{    
+    "testUser" : "testPassword",
+    "devUser" : "devPassword"
+}
+```
+
 ## Lineage and Credit
 This is a psudo-fork dotnet core implementation of the previous .NET Framework [CSVtoJSON](https://github.com/jeffhollan/CSVtoJSON) repo provided by Jeff Hollan. 
 
