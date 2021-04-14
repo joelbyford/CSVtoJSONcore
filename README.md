@@ -1,9 +1,13 @@
+[![Test on Pull Request to Main](https://github.com/joelbyford/CSVtoJSONcore/actions/workflows/main-pr.yml/badge.svg)](https://github.com/joelbyford/CSVtoJSONcore/actions/workflows/main-pr.yml)
+
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fjoelbyford%2FCSVtoJSONcore%2Fmain%2FDeployTemplates%2FAzureLinuxWebAppArm.json)
+
 # CSVtoJSONcore
 **IMPORTANT: For a .NET Framework version of this repo, please see [joelbyford/CSVtoJSON](https://github.com/joelbyford/CSVtoJSON) instead (which was forked from [jeffhollan/CSVtoJSON](https://github.com/jeffhollan/CSVtoJSON)).**
 
 Simple REST API which converts a delimited payload (via HTTP POST) to a JSON object.  
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fjoelbyford%2FCSVtoJSONcore%2Fmain%2FDeployTemplates%2FAzureLinuxWebAppArm.json)
+
 
 ## Examples and Usage
 Optional querystring parameter to allow consumers to specify the delimiter being used in the text file and allows for other delimiters (such as | or ;).  Usage is:
