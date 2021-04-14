@@ -1,0 +1,55 @@
+name: Test on Pull Request to Main
+# only run on Pull Requests that are made to the main branch
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+
+    - name: Setup dotnet 5.0.x
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+
+    - name: Restore package dependencies
+      run: dotnet restore
+
+    - name: dotet build
+      run: dotnet build --no-restore --configuration Release
+      
+    - name: dotnet publish
+      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp 
+
+    - name: Azure WebApp Deploy
+      uses: Azure/webapps-deploy@v2
+      with:
+        # Name of the Azure Web App
+        app-name: CSVtoJSON
+        # Applies to Web Apps(Windows and Linux) and Web App Containers(linux). Multi container scenario not supported. Publish profile (*.publishsettings) file contents with Web Deploy secrets
+        publish-profile: ${{secrets.AZUREWEBAPPPUBLISHPROFILE_TEST}}
+        # Enter an existing Slot other than the Production slot
+        slot-name: test
+        # Applies to Web App only: Path to package or folder. *.zip, *.war, *.jar or a folder to deploy
+        package: ${{env.DOTNET_ROOT}}/myapp
+
+    - name: Setup Python
+      uses: actions/setup-python@v2.2.1
+
+    - name: Install pytest
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest
+        pip install requests
+
+    - name: Test with pytest
+      run: |
+        cd test
+        pytest --url ${{secrets.TEST_URL}}
