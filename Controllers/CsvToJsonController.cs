@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using CsvHelper;
+using CsvHelper.Configuration;
 using System.IO;
 
 
@@ -32,12 +33,12 @@ namespace CsvToJsonCore.Controllers
 
             using (TextReader sr = new StringReader(body))
             {
-                var csv = new CsvReader(sr, System.Globalization.CultureInfo.CreateSpecificCulture("en-US"));
                 //set the delimiter type
-                csv.Configuration.Delimiter = delimiter.ToString();
+                var config = new CsvConfiguration(System.Globalization.CultureInfo.CurrentCulture) { Delimiter = delimiter.ToString() };
+                using var csv = new CsvReader(sr, config);
 
                 //read header - not necessary to leverage header record functionality currently
-                csv.Configuration.HasHeaderRecord = false;
+                //csv.Configuration.HasHeaderRecord = false;
                 if (csv.Read())
                 {
                     for (int i = 0; csv.TryGetField<string>(i, out value); i++)
