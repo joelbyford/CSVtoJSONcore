@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-
+    name: Build to Test Slot
     runs-on: ubuntu-latest
 
     steps:
@@ -40,6 +40,15 @@ jobs:
         # Applies to Web App only: Path to package or folder. *.zip, *.war, *.jar or a folder to deploy
         package: ${{env.DOTNET_ROOT}}/myapp
 
+  test:
+    name: Smoke Test
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+      
     - name: Setup Python
       uses: actions/setup-python@v2.2.1
 
