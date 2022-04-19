@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-
+    name: Build to Staging Slot
     runs-on: ubuntu-latest
 
     steps:
@@ -44,6 +44,7 @@ jobs:
         package: ${{env.DOTNET_ROOT}}/myapp
          
   test:
+    name: Smoke Test Staging Slot
     runs-on: ubuntu-latest
     needs: build
     steps:
@@ -64,6 +65,7 @@ jobs:
           pytest --url ${{secrets.STAGING_URL}}
     
   swap-to-prod:
+    name: Swap Staging to Prod
     runs-on: ubuntu-latest
     needs: test
     steps:
