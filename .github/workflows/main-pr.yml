@@ -32,7 +32,7 @@ jobs:
       uses: Azure/webapps-deploy@v2
       with:
         # Name of the Azure Web App
-        app-name: CSVtoJSON
+        app-name: ${{secrets.APP_NAME}}
         # Applies to Web Apps(Windows and Linux) and Web App Containers(linux). Multi container scenario not supported. Publish profile (*.publishsettings) file contents with Web Deploy secrets
         publish-profile: ${{secrets.AZUREWEBAPPPUBLISHPROFILE_TEST}}
         # Enter an existing Slot other than the Production slot
