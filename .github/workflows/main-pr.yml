@@ -28,17 +28,35 @@ jobs:
     - name: dotnet publish
       run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp 
 
-    - name: Azure WebApp Deploy
-      uses: Azure/webapps-deploy@v2
+    - name: zip package
+      run: |
+        cd ${{env.DOTNET_ROOT}}/myapp
+        zip -r myapp.zip .
+
+    # Installs the CLI-beta in a python venv
+    - name: Installing CLI-beta for OpenID Connect
+      run: |
+        cd ../..
+        CWD="$(pwd)"
+        python3 -m venv oidc-venv
+        . oidc-venv/bin/activate
+        echo "activated environment"
+        python3 -m pip install -q --upgrade pip
+        echo "started installing cli beta"
+        pip install -q --extra-index-url https://azcliprod.blob.core.windows.net/beta/simple/ azure-cli
+        echo "***************installed cli beta*******************"
+        echo "$CWD/oidc-venv/bin" >> $GITHUB_PATH
+      
+    # Logs into Azure (note no password)
+    - name: 'Az CLI login'
+      uses: azure/login@v1.4.0
       with:
-        # Name of the Azure Web App
-        app-name: ${{secrets.APP_NAME}}
-        # Applies to Web Apps(Windows and Linux) and Web App Containers(linux). Multi container scenario not supported. Publish profile (*.publishsettings) file contents with Web Deploy secrets
-        publish-profile: ${{secrets.AZUREWEBAPPPUBLISHPROFILE_TEST}}
-        # Enter an existing Slot other than the Production slot
-        slot-name: test
-        # Applies to Web App only: Path to package or folder. *.zip, *.war, *.jar or a folder to deploy
-        package: ${{env.DOTNET_ROOT}}/myapp
+        client-id: ${{ secrets.AZURE_CLIENTID }}
+        tenant-id: ${{ secrets.AZURE_TENANTID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTIONID }}
+    
+    - name: Azure CLI Publish
+      run: az webapp deployment source config-zip -g rgDoNotDeleteDemos -n ${{secrets.APP_NAME}} --slot test --src ${{env.DOTNET_ROOT}}/myapp/myapp.zip
 
   test:
     name: Smoke Test
