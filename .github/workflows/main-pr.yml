@@ -5,6 +5,10 @@ on:
   pull_request:
     branches: [ main ]
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   build:
     name: Build to Test Slot
@@ -28,17 +32,23 @@ jobs:
     - name: dotnet publish
       run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp 
 
-    - name: Azure WebApp Deploy
-      uses: Azure/webapps-deploy@v2
+    - name: zip package
+      run: |
+        cd ${{env.DOTNET_ROOT}}/myapp
+        zip -r myapp.zip .
+      
+    # Logs into Azure via OIDC (note no password)
+    - name: 'Az OIDC CLI login'
+      uses: azure/login@v1
       with:
-        # Name of the Azure Web App
-        app-name: ${{secrets.APP_NAME}}
-        # Applies to Web Apps(Windows and Linux) and Web App Containers(linux). Multi container scenario not supported. Publish profile (*.publishsettings) file contents with Web Deploy secrets
-        publish-profile: ${{secrets.AZUREWEBAPPPUBLISHPROFILE_TEST}}
-        # Enter an existing Slot other than the Production slot
-        slot-name: test
-        # Applies to Web App only: Path to package or folder. *.zip, *.war, *.jar or a folder to deploy
-        package: ${{env.DOTNET_ROOT}}/myapp
+        client-id: ${{ secrets.AZURE_CLIENTID }}
+        tenant-id: ${{ secrets.AZURE_TENANTID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTIONID }}
+        # Name of the environment. Supported values are azurecloud, azurestack, azureusgovernment, azurechinacloud, azuregermancloud. Default being azurecloud
+        # environment: azurecloud
+    
+    - name: Azure CLI Publish
+      run: az webapp deployment source config-zip -g rgDoNotDeleteDemos -n ${{secrets.APP_NAME}} --slot test --src ${{env.DOTNET_ROOT}}/myapp/myapp.zip
 
   test:
     name: Smoke Test
