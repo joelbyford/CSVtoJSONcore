@@ -5,6 +5,10 @@ on:
   pull_request:
     branches: [ main ]
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   build:
     name: Build to Test Slot
@@ -32,24 +36,10 @@ jobs:
       run: |
         cd ${{env.DOTNET_ROOT}}/myapp
         zip -r myapp.zip .
-
-    # Installs the CLI-beta in a python venv
-    - name: Installing CLI-beta for OpenID Connect
-      run: |
-        cd ../..
-        CWD="$(pwd)"
-        python3 -m venv oidc-venv
-        . oidc-venv/bin/activate
-        echo "activated environment"
-        python3 -m pip install -q --upgrade pip
-        echo "started installing cli beta"
-        pip install -q --extra-index-url https://azcliprod.blob.core.windows.net/beta/simple/ azure-cli
-        echo "***************installed cli beta*******************"
-        echo "$CWD/oidc-venv/bin" >> $GITHUB_PATH
       
     # Logs into Azure (note no password)
     - name: 'Az CLI login'
-      uses: azure/login@v1.4.0
+      uses: azure/login@v1
       with:
         client-id: ${{ secrets.AZURE_CLIENTID }}
         tenant-id: ${{ secrets.AZURE_TENANTID }}
