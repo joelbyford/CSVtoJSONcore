@@ -37,13 +37,15 @@ jobs:
         cd ${{env.DOTNET_ROOT}}/myapp
         zip -r myapp.zip .
       
-    # Logs into Azure (note no password)
-    - name: 'Az CLI login'
+    # Logs into Azure via OIDC (note no password)
+    - name: 'Az OIDC CLI login'
       uses: azure/login@v1
       with:
         client-id: ${{ secrets.AZURE_CLIENTID }}
         tenant-id: ${{ secrets.AZURE_TENANTID }}
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTIONID }}
+        # Name of the environment. Supported values are azurecloud, azurestack, azureusgovernment, azurechinacloud, azuregermancloud. Default being azurecloud
+        # environment: azurecloud
     
     - name: Azure CLI Publish
       run: az webapp deployment source config-zip -g rgDoNotDeleteDemos -n ${{secrets.APP_NAME}} --slot test --src ${{env.DOTNET_ROOT}}/myapp/myapp.zip
