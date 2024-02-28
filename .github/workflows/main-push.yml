@@ -22,10 +22,10 @@ jobs:
     - name: Git checkout
       uses: actions/checkout@v2
 
-    - name: Setup dotnet 5.0.x
+    - name: Setup dotnet 8.0.x
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 8.0.x
 
     - name: Restore package dependencies
       run: dotnet restore
