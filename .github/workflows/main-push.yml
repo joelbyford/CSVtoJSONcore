@@ -20,10 +20,10 @@ jobs:
 
     steps:
     - name: Git checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Setup dotnet 8.0.x
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
 
@@ -43,7 +43,7 @@ jobs:
     
     # Logs into Azure via OIDC (note no password)
     - name: 'Az OIDC CLI login'
-      uses: azure/login@v1
+      uses: azure/login@v2
       with:
         client-id: ${{ secrets.AZURE_CLIENTID }}
         tenant-id: ${{ secrets.AZURE_TENANTID }}
@@ -61,10 +61,10 @@ jobs:
     needs: build
     steps:
       - name: Git checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         
       - name: Setup Python
-        uses: actions/setup-python@v2.2.1
+        uses: actions/setup-python@v5
 
       - name: Install pytest
         run: |
@@ -82,7 +82,7 @@ jobs:
     needs: test
     steps:
       - name: 'Az OIDC CLI login'
-        uses: azure/login@v1
+        uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZURE_CLIENTID }}
           tenant-id: ${{ secrets.AZURE_TENANTID }}
@@ -91,7 +91,7 @@ jobs:
           # environment: azurecloud
 
       - name: Azure Publish to Staging
-        uses: Azure/cli@1.0.4
+        uses: Azure/cli@1
         with:
           # Specify the script here
           inlineScript: az webapp deployment slot swap  --name ${{secrets.APP_NAME}} --resource-group ${{secrets.APP_RG}} --slot stage --target-slot production
