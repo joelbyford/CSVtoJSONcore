@@ -91,7 +91,7 @@ jobs:
           # environment: azurecloud
 
       - name: Azure Publish to Staging
-        uses: Azure/cli@1
+        uses: Azure/cli@1.0.4
         with:
           # Specify the script here
           inlineScript: az webapp deployment slot swap  --name ${{secrets.APP_NAME}} --resource-group ${{secrets.APP_RG}} --slot stage --target-slot production
