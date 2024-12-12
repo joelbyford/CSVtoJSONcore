@@ -1,7 +1,5 @@
 [![Test on Pull Request to Main](https://github.com/joelbyford/CSVtoJSONcore/actions/workflows/main-pr.yml/badge.svg)](https://github.com/joelbyford/CSVtoJSONcore/actions/workflows/main-pr.yml) [![Deploy on Push to Main](https://github.com/joelbyford/CSVtoJSONcore/actions/workflows/main-push.yml/badge.svg)](https://github.com/joelbyford/CSVtoJSONcore/actions/workflows/main-push.yml)
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fjoelbyford%2FCSVtoJSONcore%2Fmain%2FDeployTemplates%2FAzureLinuxWebAppArm.json)
-
 # CSVtoJSONcore
 **IMPORTANT: For a .NET Framework version of this repo, please see [joelbyford/CSVtoJSON](https://github.com/joelbyford/CSVtoJSON) instead (which was forked from [jeffhollan/CSVtoJSON](https://github.com/jeffhollan/CSVtoJSON)).**
 
@@ -49,6 +47,29 @@ Results should appear similar to the following:
 
 ```
 Additional examples can be found in the `test` folder.
+
+## Azure Deployment Instructions
+If you are deploying to Azure, the following are steps you can use to re-use/leverage the existing CI/CD pipeline defined in the GitHub Actions YML files which already exist in this repo:
+
+1. Create your [App Service](https://learn.microsoft.com/en-us/azure/app-service/) in an Azure Subscription
+2. Create 2 additional [Deployment Slots](https://learn.microsoft.com/en-us/azure/app-service/deploy-staging-slots?tabs=portal) (one for testing and one for staging)
+3. Define an [OpenID Connect](https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure-openid-connect) credential for GitHub to leverage.
+4. Fork the Repo (this will probably trigger a GitHub Action which will fail . . .don't worry. . .it's not configured yet).
+5. Add the following Secrets in your forked repo:
+
+<u>Used for OpenID Connect Authentication:</u>
+- **AZURE_CLIENTID** (See OpenID Connect Instructions)
+- **AZURE_TENANTID** (See OpenID Connect Instructions)
+- **AZURE_SUBSCRIPTIONID** (See OpenID Connect Instructions)
+
+<u>General Parameters kept secret so not giving away too many details about your deployment in a public repo:</u>
+- **APP_NAME** - the name of your AppService in Azure
+- **APP_RG** - the resource group name where your AppService lives
+
+<u>Automated Smoke Testing (currently uses PyTest) parameters:</u>
+- **TEST_URL** - the URL for accessing your AppService test slot in Azure (e.g. "https://{mysite}-test.azurewebsites.net/" if you named your slot "test")
+- **STAGING_URL** - the URL for accessing your AppService staging slot in Azure (e.g. "https://{mysite}-staging.azurewebsites.net/" if you named your slot "staging").
+
 
 ## Basic Authentication (Added on 1/19/2021)
 Added the ability to use Basic Authentication with the API.  In order to leverage this functionality, please use the `appsettings.json` file to enable basic authentication, provide your "realm" (typically your API's url), and point to the json file where your users are listed (defaults to the provided `authorizedUsers.json`):
