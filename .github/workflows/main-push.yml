@@ -25,7 +25,7 @@ jobs:
     - name: Setup dotnet 8.0.x
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: 10.x
 
     - name: Restore package dependencies
       run: dotnet restore
