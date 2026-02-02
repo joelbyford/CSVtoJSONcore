@@ -1,5 +1,15 @@
 # Provided here are several examples that can be used to test the API that it is functioning correctly when running on the localhost.
 
+# To make use of this file, you can use the REST Client extension for Visual Studio Code:
+# https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+
+###########################
+# Swagger/Swashbuckle Test
+# =========================
+GET http://localhost:5000/swagger
+
+####
+
 # Example using basic authentication & passing text/csv (see appsettings.json for enabling basic auth)
 POST http://localhost:5000/csvtojson/
 Content-Type: text/csv
