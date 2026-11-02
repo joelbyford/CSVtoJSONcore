@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using CsvHelper;
-using CsvHelper.Configuration;
 using System.IO;
 
 
@@ -27,25 +26,12 @@ namespace CsvToJsonCore.Controllers
         public ActionResult<JsonResult> Post([FromBody] string body, [FromQuery] char delimiter = ',')
         {
             JsonResult resultSet = new JsonResult();
-            String value;
             
-            string[] headers = new string[1024]; //max of 1024 columns for now
-
             using (TextReader sr = new StringReader(body))
             {
-                //set the delimiter type
-                var config = new CsvConfiguration(System.Globalization.CultureInfo.CurrentCulture) { Delimiter = delimiter.ToString() };
-                using var csv = new CsvReader(sr, config);
-
-                //read header - not necessary to leverage header record functionality currently
-                //csv.Configuration.HasHeaderRecord = false;
-                if (csv.Read())
-                {
-                    for (int i = 0; csv.TryGetField<string>(i, out value); i++)
-                    {
-                        headers[i] = value;
-                    }
-                }
+                var options = new CsvReaderOptions { Separator = delimiter };
+                using var csv = CsvReader.Create(sr, options);
+                var headers = csv.Headers;
 
                 //read the rest of the file
                 while (csv.Read())
@@ -54,10 +40,10 @@ namespace CsvToJsonCore.Controllers
                     var rowObject = new Dictionary<string, string>();
 
                     //loop through each element in the row
-                    for (int i = 0; csv.TryGetField<string>(i, out value); i++)
+                    for (int i = 0; i < csv.FieldCount; i++)
                     {
                         //Add the row value with the matching header
-                        rowObject.Add(headers[i], value);
+                        rowObject.Add(headers[i], csv.GetString(i));
                         //Log the results for debugging
                         //_logger.LogWarning(value);
                     }
