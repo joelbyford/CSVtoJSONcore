@@ -17,7 +17,13 @@ def test_post(url):
 
     # Check the status code
     assert respPost.status_code == 200
-
+    assert respPost.json() == {
+        'rows': [
+            {'this': '1', 'is': '2', 'a': '3', 'test': '4'},
+            {'this': 'a', 'is': 'b', 'a': 'c', 'test': 'd'},
+            {'this': '5', 'is': '6', 'a': '7', 'test': '8'},
+        ]
+    }
 
 
 
