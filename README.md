@@ -105,3 +105,5 @@ This is a psudo-fork dotnet core implementation of the previous .NET Framework [
 
 Additionally, many thanks go to Josh Close for his [CsvHelper](https://github.com/JoshClose/CsvHelper) package used in this project.
 
+## Update 11-18-2026
+Updating repo to leverage Azure Login v3 and OIDC with immutable repos and owners. 
